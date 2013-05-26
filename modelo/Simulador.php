@@ -4,7 +4,7 @@
  * clase que guarda los datos de los simuladores con los que cuenta el laboratorio
  * @autores: 
  * javier morales <ing.morales.javer@gmail.com>
- * luis figueroa <>
+ * luis figueroa <ing.lefigueroa.hernandez@gmail.com>
  */
 
 class Simulador extends Modelo {
@@ -15,6 +15,12 @@ class Simulador extends Modelo {
     private $mante_correctivo; // para la fecha de mantenimiento correctivo que es cuando los equipos presentaqn fallos durante el semestre y se les hace mantenimiento
     private $casa_distribuidora; // nombre de la casa a la cual se le compro el simulador 
     
+    /**
+     * 
+     */
+    public function __construct() {
+        parent::__construct();
+    }
      // mapear datos de la tabla de Simulador
      /**
       * Trae los valores de la base de datos y los mapea con los campos de la clase.
@@ -41,6 +47,23 @@ class Simulador extends Modelo {
         if (array_key_exists('casa_distribuidora', $props)) {
             $Simulador->setCasa_distribuidora($props['casa_distribuidora']);
         }
+    }
+    
+    /**
+     * 
+     * @param Simulador $Simulador
+     * @return type
+     */
+    private function getParametros(Simulador $Simulador) {
+        $parametros = array(
+            ':idSimulador' => $Simulador->getIdSimulador(),
+            ':nomSimulador' => $Simulador->getNomSimulador(),
+            ':fecha_ingreso' => $this->formatearFecha($Simulador->getFecha_ingreso()),
+            ':mante_preventivo' => $this->formatearFecha($Simulador->getMante_preventivo()),
+            ':mante_correctivo' => $this->formatearFecha($Simulador->getMante_correctivo()),
+            ':casa_distribuidora' => $Simulador->getCasa_distribuidora(),
+        );
+        return $parametros;
     }
     
     // getter and setter
@@ -97,6 +120,25 @@ class Simulador extends Modelo {
         $this->casa_distribuidora = $casa_distribuidora;
     }
 
+// funciones CRUD
 
+/**
+ * 
+ * @param Simulador $Simulador
+ */
+public function crearSimulador(Simulador $Simulador) {
+        $sql = "INSERT INTO Simulador (idSimulador, nomSimulador, fecha_ingreso, mante_preventivo, mante_correctivo, casa_distribuidora) ";
+        $sql .= " VALUES (:idSimulador, :nomSimulador, :fecha_ingreso, :mante_preventivo, :mante_correctivo, :casa_distribuidora)";
+        $this->__setSql($sql);
+        $this->prepararSentencia($sql);
+        $this->sentencia->bindParam(":idSimulador", $Simulador->getIdSimulador(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":nomSimulador", $Simulador->getNomSimulador(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":fecha_ingreso", $this->formatearFecha($Simulador->getFecha_ingreso()),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":mante_preventivo", $this->formatearFecha($Simulador->getMante_preventivo()),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":mante_correctivo", $this->formatearFecha($Simulador->getMante_correctivo()),PDO::PARAM_STR);
+         $this->sentencia->bindParam(":casa_distribuidora", $Simulador->getCasa_distribuidora(),PDO::PARAM_STR);
+       
+        $this->ejecutarSentencia();
+    }
 }
 ?>

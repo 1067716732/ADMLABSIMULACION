@@ -4,7 +4,7 @@
  * clase que guarda los datos de las practicas que se realizan en el laboratorio
  * @autores: 
  * javier morales <ing.morales.javer@gmail.com>
- * luis figueroa <>
+ * luis figueroa <ing.lefigueroa.hernandez@gmail.com>
  */
 
 class practica extends Modelo {
@@ -17,6 +17,15 @@ class practica extends Modelo {
     private $Simulador_idSimulador; // numero de identificacion del simulador que se utilizo en la practica 
     private $Equipo_idequipo; // numero de identificacion del equipo que se utilizo en la practica
     private $personas_idencargado; // numero de identificacion del encargado de recibir el modulo para la realizacion de la practica
+    private $grupo; // numero del grupo del cual va a realizar la practica
+    private $num_estudiantes; // numero de estudiantes que van a realizar la practica
+    private $hora; // hora en que se realizo la practica 
+    /**
+     * 
+     */
+    public function __construct() {
+        parent::__construct();
+ }
     
     // mapear datos de la tabla de practica
      /**
@@ -49,8 +58,36 @@ class practica extends Modelo {
         if(array_key_exists('personas_idencargado', $props)){
             $practica->setPersonas_idencargado($props['personas_idencargado']);
         }
+        if(array_key_exists('grupo', $props)){
+            $practica->setGrupo($props['grupo']);
+        }
+         if(array_key_exists('hora', $props)){
+            $practica->setHora($props['hora']);
+        }
     }
     
+    /**
+     * 
+     * @param practica $practica
+     * @return type
+     */
+     private function getParametros(practica $practica) {
+        $parametros = array(
+            ':idPractica' => $practica->getIdPractica(),
+            ':nomPractica' => $practica->getNomPractica(),
+            ':fecha_practica' => $practica->getFecha_practica(),
+            ':asignatura' => $this->formatearFecha($practica->getAsignatura()),
+            ':modulo' => $practica->getModulo(),
+            ':Simulador_idSimulador' => $practica->getSimulador_idSimulador(),
+            ':Equipo_idequipo' => $practica->getEquipo_idequipo(),
+            ':num_estudiantes' => $practica->getNum_estudiantes(),
+            ':hora' => $practica->getHora(),
+            ':personas_idencargado' => $practica->getPersonas_idencargado(),
+            ':grupo' => $practica->getGrupo()
+                
+        );
+        return $parametros;
+    }
     //getter and setter
     /**
      * 
@@ -121,7 +158,55 @@ class practica extends Modelo {
         $this->personas_idencargado = $personas_idencargado;
     }
 
+    public function getGrupo() {
+        return $this->grupo;
+    }
 
+    public function setGrupo($grupo) {
+        $this->grupo = $grupo;
+    }
+
+    public function getNum_estudiantes() {
+        return $this->num_estudiantes;
+    }
+
+    public function setNum_estudiantes($num_estudiantes) {
+        $this->num_estudiantes = $num_estudiantes;
+    }
+
+    public function getHora() {
+        return $this->hora;
+    }
+
+    public function setHora($hora) {
+        $this->hora = $hora;
+    }
+
+// funciones CRUD
+
+/**
+ * 
+ * @param practica $practica
+ */
+public function crearPractica(practica $practica) {
+        $sql = "INSERT INTO Practica (idPractica, nomPractica, fecha_practica, asignatura, modulo, Simulador_idSimulador, Equipo_idequipo, personas_idencargado, grupo, num_estudiantes, hora) ";
+        $sql .= " VALUES (:idPractica, :nomPractica, :fecha_practica, :asignatura, :modulo, :Simulador_idSimulador, :Equipo_idequipo, :personas_idencargado, :grupo, :num_estudiantes, :hora)";
+        $this->__setSql($sql);
+        $this->prepararSentencia($sql);
+        $this->sentencia->bindParam(":idPractica", $practica->getIdPractica(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":nomPractica", $practica->getNomPractica(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":fecha_practica", $this->formatearFecha($practica->getFecha_practica()),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":asignatura", $practica->getAsignatura(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":modulo", $practica->getModulo(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":Simulador_idSimulador", $practica->getSimulador_idSimulador(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":Equipo_idequipo", $practica->getEquipo_idequipo(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":personas_idencargado", $practica->getPersonas_idencargado(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":grupo", $practica->getGrupo(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":num_estudiantes", $practica->getNum_estudiantes(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":hora", $practica->getHora(),PDO::PARAM_STR);
+       
+        $this->ejecutarSentencia();
+    }
     
 }
 ?>

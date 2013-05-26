@@ -4,7 +4,7 @@
  * clase que guarda los datos de los equipos de laboratorio
  * @autores: 
  * javier morales <ing.morales.javer@gmail.com>
- * luis figueroa <>
+ * luis figueroa <ing.lefigueroa.hernandez@gmail.com>
  */
 
 class Equipo extends Modelo {
@@ -13,13 +13,20 @@ private $nomEquipo; // para el nombre del equipo
 private $mante_preventivo; // para la fecha de mantenimiento preventivo que es el que se les realiza a los equipos semestralmente
 private $mante_correctivo; // para la fecha de mantenimiento correctivo que es cuando los equipos presentaqn fallos durante el semestre y se les hace mantenimiento
 
+/**
+ * 
+ */
+public function __construct() {
+        parent::__construct();
+    }
+
 // mapear datos de la tabla de Equipos
      /**
       * Trae los valores de la base de datos y los mapea con los campos de la clase.
       * @param Equipo $Equipo
       * @param array $props
       */
-
+        
  private function mapearEquipo (Equipo $Equipo, array $props) {
        if (array_key_exists('idEquipo', $props)){
            $Equipo->setIdEquipo($props['idEquipo']);
@@ -34,7 +41,21 @@ private $mante_correctivo; // para la fecha de mantenimiento correctivo que es c
            $Equipo->setMante_correctivo(self::crearFecha($props['mante_correctivo']));
        } 
     }
-
+    
+     /**
+      * 
+      * @param Equipo $Equipo
+      * @return type
+      */
+    private function getParametros(Equipo $Equipo) {
+        $parametros = array(
+            ':idEquipo' => $Equipo->getIdEquipo(),
+            ':nomEquipo' => $Equipo->getNomEquipo(),
+            ':mante_preventivo' => $this->formatearFecha($Equipo->getMante_preventivo()),
+            ':mante_correctivo' => $this->formatearFecha($Equipo->getMante_correctivo()),
+        );
+        return $parametros;
+    }
 //getter and setter
 /**
  * 
@@ -72,5 +93,24 @@ public function setMante_correctivo($mante_correctivo) {
     $this->mante_correctivo = $mante_correctivo;
 }
 
+// funciones CRUD
+
+/**
+ * 
+ * @param Equipo $Equipo
+ */
+public function crearEquipo(Equipo $Equipo) {
+        $sql = "INSERT INTO Equipo (idEquipo, nomEquipo, mante_preventivo, mante_correctivo) ";
+        $sql .= " VALUES (:idEquipo, :nomEquipo, :mante_preventivo, :mante_correctivo)";
+        $this->__setSql($sql);
+        $this->prepararSentencia($sql);
+        $this->sentencia->bindParam(":idEquipo", $Equipo->getIdEquipo(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":nomEquipo", $Equipo->getNomEquipo(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":mante_preventivo", $this->formatearFecha($Equipo->getMante_preventivo()),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":mante_correctivo", $this->formatearFecha($Equipo->getMante_correctivo()),PDO::PARAM_STR);
+       
+        $this->ejecutarSentencia();
+    }
+    
 }
 ?>

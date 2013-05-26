@@ -4,7 +4,7 @@
  * clase que guarda los datos de los insumos con los que cuenta el laboratorio
  * @autores: 
  * javier morales <ing.morales.javer@gmail.com>
- * luis figueroa <>
+ * luis figueroa <ing.lefigueroa.hernandez@gmail.com>
  */
 
 class Insumos extends Modelo {
@@ -13,7 +13,13 @@ class Insumos extends Modelo {
     private $cantidad; // catidad del insumo en el inventario del laboratorio
     private $unidad; // unidad en la que se encuenra el insumo (litro, par etc)
     
-    // mapear datos de la tabla Insumos
+    /**
+     * 
+     */
+    public function __construct() {
+        parent::__construct();
+    }
+// mapear datos de la tabla Insumos
     /**
       * Trae los valores de la base de datos y los mapea con los campos de la clase.
       * @param Insumo $Insumo
@@ -32,6 +38,21 @@ class Insumos extends Modelo {
        if (array_key_exists('unidad', $props)){
            $Insumos->setUnidad($props['unidad']);
        } 
+    }
+    
+    /**
+     * 
+     * @param Insumos $Insumos
+     * @return type
+     */
+    private function getParametros(Insumos $Insumos) {
+        $parametros = array(
+            ':idInsumo' => $Insumos->getIdInsumo(),
+            ':nomInsumo' => $Insumos->getNomInsumo(),
+            ':cantidad' => $Insumos->getCantidad(),
+            ':unidad' => $Insumos->getUnidad(),
+        );
+        return $parametros;
     }
     
     //getter and setter
@@ -66,7 +87,22 @@ class Insumos extends Modelo {
     public function setUnidad($unidad) {
         $this->unidad = $unidad;
     }
-
-   
+//Funciones CRUD
+    
+/**
+ * 
+ * @param Insumos $Insumos
+ */
+    public function crearInsumos(Insumos $Insumos) {
+        $sql = "INSERT INTO Insumos (idInsumos, nomInsumo, cantidad, unidad) ";
+        $sql .= " VALUES (:idInsumos, :nomInsumo, :cantidad, :unidad)";
+        $this->__setSql($sql);
+        $this->prepararSentencia($sql);
+        $this->sentencia->bindParam(":idInsumos", $Insumos->getIdInsumo(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":nomInsumo", $Insumos->getNomInsumo(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":cantidad", $Insumos->getCantidad(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":tunidad", $Insumos->getUnidad(),PDO::PARAM_STR);
+        $this->ejecutarSentencia();
+    } 
 }
 ?>

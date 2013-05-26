@@ -1,5 +1,3 @@
-
-
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
@@ -29,7 +27,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `mydb`.`personas` ;
 
 CREATE  TABLE IF NOT EXISTS `mydb`.`personas` (
-  `idencargado` INT NOT NULL ,
+  `idencargado` VARCHAR(10) NOT NULL ,
   `nombres` VARCHAR(20) NOT NULL ,
   `apellidos` VARCHAR(20) NOT NULL ,
   `asignatura` VARCHAR(15) NOT NULL ,
@@ -94,9 +92,12 @@ CREATE  TABLE IF NOT EXISTS `mydb`.`Practica` (
   `fecha_Practica` DATETIME NOT NULL ,
   `asignatura` VARCHAR(20) NOT NULL ,
   `modulo` VARCHAR(1) NOT NULL ,
+  `grupo` VARCHAR(2) NOT NULL ,
+  `hora` VARCHAR(6) NOT NULL ,
+  `num_estudiantes` VARCHAR(3) NOT NULL ,
   `Simulador_idSimulador` VARCHAR(20) NOT NULL ,
   `Equipo_idEquipo` VARCHAR(10) NOT NULL ,
-  `personas_idencargado` INT NOT NULL ,
+  `personas_idencargado` VARCHAR(10) NOT NULL ,
   PRIMARY KEY (`idPractica`, `Simulador_idSimulador`, `Equipo_idEquipo`, `personas_idencargado`) ,
   INDEX `fk_Practica_Simulador_idx` (`Simulador_idSimulador` ASC) ,
   INDEX `fk_Practica_Equipo1_idx` (`Equipo_idEquipo` ASC) ,

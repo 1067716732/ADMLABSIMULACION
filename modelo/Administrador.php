@@ -4,7 +4,7 @@
  * clase que guarda los datos del administrador
  * @autores: 
  * javier morales <ing.morales.javer@gmail.com>
- * luis figueroa <>
+ * luis figueroa <ing.lefigueroa.hernandez@gmail.com>
  */
 
 class Administrador extends Modelo {
@@ -13,6 +13,14 @@ class Administrador extends Modelo {
     private $apeAdministrador; // campo para los apellidos del administrador
     private $telAdministrador; // campo para el numero de telefono del administrador
     private $cargo; // campo para el cargo que ejerce el administrador dentro del laboratorio
+    
+   /**
+    * 
+    */
+    
+    public function __construct() {
+        parent::__construct();
+    }
     
     // mapear datos de la tabla Administrador
     /**
@@ -36,6 +44,20 @@ class Administrador extends Modelo {
        } 
     }
     
+    /**
+     * 
+     * @param Administrador $Administrador
+     * @return type
+     */
+    private function getParametros(Administrador $Administrador) {
+        $parametros = array(
+            ':idAdministrador' => $Administrador->getIdAdministrador(),
+            ':nomAdministrador' => $Administrador->getNomAdministrador(),
+            ':apeAdministrador' => $Administrador->getApeAdministrador(),
+            ':cargo' => $Administrador->getCargo(),
+        );
+        return $parametros;
+    }
     //getter and setter
     /**
      * 
@@ -81,7 +103,26 @@ class Administrador extends Modelo {
     public function setCargo($cargo) {
         $this->cargo = $cargo;
     }
- 
+    
+ //Funciones CRUD
+    
+/**
+ * 
+ * @param Administrador $Administrador
+ */
+    public function crearAdministrador(Administrador $Administrador) {
+        $sql = "INSERT INTO Administrador (idAdministrador, nomAdministrador, apeAdministrador, telAdministrador, cargo) ";
+        $sql .= " VALUES (:idAdministrador, :nomAdministrador, :apeAdministrador, :telAdministrador, :cargo)";
+        $this->__setSql($sql);
+        $this->prepararSentencia($sql);
+        $this->sentencia->bindParam(":idAdministrador", $Administrador->getIdAdministrador(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":nomAdministrador", $Administrador->getNomAdministrador(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":apeAdministrador", $Administrador->getApeAdministrador(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":telAdministrador", $Administrador->getTelAdministrador(),PDO::PARAM_STR);
+        $this->sentencia->bindParam(":cargo", $Administrador->getCargo(),PDO::PARAM_STR);
+        $this->ejecutarSentencia();
+    }
+    
 }
 
 ?>

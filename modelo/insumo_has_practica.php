@@ -4,7 +4,7 @@
  * clase que guarda los datos de la tabla intercepto entre las tablas insumo y practica
  * @autores: 
  * javier morales <ing.morales.javer@gmail.com>
- * luis figueroa <>
+ * luis figueroa <ing.lefigueroa.hernandez@gmail.com>
  */
 
 class insumo_has_practica extends Modelo {
@@ -13,6 +13,12 @@ class insumo_has_practica extends Modelo {
     private $Practica_idPractica; // numero de identificaion de la practica que se va a realizar 
     private $cantidad; // cantidad de cada uno de los insumos que se va a utilizar en la practica la cual se resta del inventario 
     
+    /**
+     * 
+     */
+    public function __construct() {
+        parent::__construct();
+    }
     // mapear la tabla insumo has practica
     /**
       * Trae los valores de la base de datos y los mapea con los campos de la clase.
@@ -32,7 +38,20 @@ class insumo_has_practica extends Modelo {
        } 
     }
 
-
+    /**
+     * 
+     * @param insumo_has_practica $insumo_has_practica
+     * @return type
+     */
+ private function getParametros(insumo_has_practica $insumo_has_practica) {
+        $parametros = array(
+            ':Insumo_idInsumos' => $insumo_has_practica->getInsumo_idInsumos(),
+            ':Practica_idPractica' => $insumo_has_practica->getPractica_idPractica(),
+            ':cantidad' => $insumo_has_practica->getCantidad()
+                );
+        return $parametros;
+    }
+    
     //getter and setter
     
     /**
